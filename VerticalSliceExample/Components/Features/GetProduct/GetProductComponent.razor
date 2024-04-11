@@ -1,0 +1,48 @@
+﻿@using MediatR
+@using Models
+@inject IMediator Mediatr
+
+<div class="w-fit h-fit flex flex-col gap-16">
+    <h3 class="text-xl">
+        Get Product
+    </h3>
+    
+    <RadzenDataGrid Data="@_products" TItem="Product">
+        <Columns>
+            <RadzenDataGridColumn TItem="Product" Property="Name" Title="Name" Frozen="true"/>
+            <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" Frozen="true"/>
+            <RadzenDataGridColumn TItem="Product" Property="Quantity" Title="Quantity" Frozen="true"/>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
+
+@code {
+    GetProductQuery? _query;
+    GetProductResponse? _response;
+    List<Product>? _products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _query = new GetProductQuery();
+        await GetProducts();
+    }
+
+    private async Task GetProducts()
+    {
+        if (_query != null)
+        {
+            _response = await Mediatr.Send(_query);
+            _products = _response.Products;
+        }
+
+        _query = new GetProductQuery();
+        StateHasChanged();
+    }
+
+    public async void Reload()
+    {
+        await GetProducts();
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,72 @@
+﻿@using MediatR
+@inject IMediator Mediatr
+
+<div class="w-fit h-fit flex flex-col gap-16">
+    <h3 class="text-xl">
+        Add Product
+    </h3>
+   
+    @if (_command != null)
+    {
+        <div class="flex flex-col gap-3 w-60">
+            <div class="flex flex-row justify-between">
+                <label>Name</label>
+                <input
+                    class="w-40 border-2 border-slate-500"
+                    type="text"
+                    @bind="_command.Name"/>
+            </div>
+
+            <div class="flex flex-row justify-between">
+                <label>Preis</label>
+                <input
+                    class="w-40 border-2 border-slate-500"
+                    type="number"
+                    @bind="_command.Price"/>
+            </div>
+
+            <div class="flex flex-row justify-between">
+                <label>Menge</label>
+                <input
+                    class="w-40 border-2 border-slate-500"
+                    type="number"
+                    @bind="_command.Quantity"/>
+            </div>
+        </div>
+        
+        <button class="w-fit h-fit px-3 py-2 bg-black text-white self-center" @onclick="async () => await AddProduct()">
+            Submit
+        </button>
+    }
+    
+    
+    @if (_response is { IsSuccess: true })
+    {
+        <p class="text-green-500 self-center">
+            Success!
+        </p>
+    }
+</div>
+
+
+@code {
+    AddProductCommand? _command;
+    AddProductResponse? _response;
+
+    public event EventHandler? ReloadProducts;
+
+    protected override Task OnInitializedAsync()
+    {
+        _command = new AddProductCommand();
+        return Task.CompletedTask;
+    }
+
+    private async Task AddProduct()
+    {
+        if (_command != null) _response = await Mediatr.Send(_command);
+        _command = new AddProductCommand();
+        
+        ReloadProducts?.Invoke(this, EventArgs.Empty);
+        StateHasChanged();
+    }
+}

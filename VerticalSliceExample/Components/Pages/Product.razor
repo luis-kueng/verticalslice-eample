@@ -1,0 +1,29 @@
+﻿@page "/product"
+@rendermode InteractiveServer
+@using VerticalSliceExample.Components.Features.AddProduct
+@using VerticalSliceExample.Components.Features.GetProduct
+
+<PageTitle>Products</PageTitle>
+
+<div class="w-full h-full flex flex-col gap-10 items-center">
+    <h1 class="text-3xl">Product</h1>
+    <AddProductComponent @ref="_addProductComponent" />
+    <GetProductComponent @ref="_getProductComponent" />
+</div>
+
+@code
+{
+    AddProductComponent? _addProductComponent;
+    GetProductComponent? _getProductComponent;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (_addProductComponent != null) _addProductComponent.ReloadProducts += c_ReloadProducts;
+    }
+
+    private void c_ReloadProducts(object? sender, EventArgs e)
+    {
+        _getProductComponent?.Reload();
+        StateHasChanged();
+    }
+}
