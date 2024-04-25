@@ -5,10 +5,12 @@
 
 <PageTitle>Products</PageTitle>
 
-<div class="w-full h-full flex flex-col gap-10 items-center">
+<div class="h-fit flex flex-col gap-10 items-center pb-20">
     <h1 class="text-3xl">Product</h1>
+    <div class="w-1/2">
+        <GetProductComponent @ref="_getProductComponent" />
+    </div>
     <AddProductComponent @ref="_addProductComponent" />
-    <GetProductComponent @ref="_getProductComponent" />
 </div>
 
 @code
